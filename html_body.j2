@@ -15,11 +15,11 @@
 <h3 style='margin-top:0cm'><strong><span lang=EN style='font-family:"Verdana",sans-serif;color:green'>{{ type }}</span></strong><span lang=EN style='font-family:"Verdana",sans-serif;color:green'><o:p></o:p></span></h3>
 <p><span lang=EN style='font-family:"Verdana",sans-serif'>Please find the status of <b>Ansible {{ platform | upper }} Onboarding</b>.<o:p></o:p></span></p>
 
-{% set final_status = "failed" %}
+{% set final_status = "success" %}
 {% for key, items in all_onboarding_status.items() %}
     {% for value, status in items.items() %}
         {% if 'success' in (status | lower) %}
-            {% set final_status = "success" %}
+            {% set final_status = "failed" %}
         {% endif %}    
     {% endfor %}
 {% endfor %}
@@ -114,3 +114,12 @@
 </div>
 </body>
 </html>
+- name: Determine final_status
+  set_fact:
+    final_status: >-
+      {% set flattened_statuses = all_onboarding_status.values() | map(attribute='values') | list | sum([], start=[]) | map('lower') | list %}
+      {% if "failed" in flattened_statuses %}
+      failed
+      {% else %}
+      success
+      {% endif %}
