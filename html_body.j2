@@ -114,3 +114,17 @@
 </div>
 </body>
 </html>
+{% set final_status = "success" %}
+{% set failed_statuses = [] %}  <!-- Initialize an empty list to collect failed statuses -->
+
+{% for key, items in all_onboarding_status.items() %}
+    {% for value, status in items.items() %}
+        {% if "failed" in status | lower %}
+            {% do failed_statuses.append(true) %}
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+
+{% if failed_statuses | length > 0 %}
+    {% set final_status = "failed" %}
+{% endif %}
