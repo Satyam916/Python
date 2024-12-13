@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body lang=EN-IN link=blue vlink=purple style='word-wrap:break-word'>
+<div class=WordSection1>
+<p class=MsoNormal><span lang=EN style='font-family:"Verdana",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<table class=MsoNormalTable border=0 cellspacing=3 cellpadding=0 width="100%" style='width:100.0%'>
+<tr><td style='padding:.75pt .75pt .75pt .75pt'><p class=MsoNormal align=center style='text-align:center'><span style='font-family:"Verdana",sans-serif'><img width=863 height=165 style='width:8.9916in;height:1.7166in' id="EIO_LOGO" src="data:image/jpg;base64,{{ img_src }}" alt="EIO_LOGO"></span><span style='font-family:"Verdana",sans-serif'><o:p></o:p></span></p></td><td valign=bottom style='padding:.75pt .75pt .75pt .75pt'></td></tr>
+</table>
+
+<h3 style='margin-top:0cm'><strong><span lang=EN style='font-family:"Verdana",sans-serif;color:green'>{{ type }}</span></strong><span lang=EN style='font-family:"Verdana",sans-serif;color:green'><o:p></o:p></span></h3>
+<p><span lang=EN style='font-family:"Verdana",sans-serif'>Please find the status of <b>Ansible {{ platform | upper }} Onboarding</b>.<o:p></o:p></span></p>
+
+{% set final_status = "failed" %}
+{% for key, items in all_onboarding_status.items() %}
+    {% for value, status in items.items() %}
+        {% if 'success' in (status | lower) %}
+            {% set final_status = "success" %}
+        {% endif %}    
+    {% endfor %}
+{% endfor %}
+
+<table class=MsoNormalTable border=0 cellspacing=3 cellpadding=0 style="width:100%; text-align:left;">
+<tr>
+<td style="padding: 10pt; width: 33%;"><p class=MsoNormal><b><span style='font-family:"Verdana",sans-serif'>Status<o:p></o:p></span></b></p></td>
+<td style="padding: 10pt; width: 33%;"><p class=MsoNormal><b><span style='font-family:"Verdana",sans-serif'>Request Type<o:p></o:p></span></b></p></td>
+<td style="padding: 10pt; width: 33%;"><p class=MsoNormal><b><span style='font-family:"Verdana",sans-serif'>Environment<o:p></o:p></span></b></p></td>
+</tr>
+<tr>
+{% if (final_status == "success") %}
+<td style="padding: 10pt; width: 33%;"><p class=MsoNormal><span style='font-family:"Verdana",sans-serif'><font color="green">{{ onboarding_status | upper }}</font><o:p></o:p></span></p></td><td style="padding: 10pt; width: 33%;"><p class=MsoNormal><span style='font-family:"Verdana",sans-serif'>{{ request_type | upper }}<o:p></o:p></span></p></td><td style="padding: 10pt; width: 33%;"><p class=MsoNormal><span style='font-family:"Verdana",sans-serif'><a href={{ ansi_url | trim }}><span style='color:blue'>{{ post_environ | upper }}</span></a><o:p></o:p></span></p></td>
+{% elif (final_status == "failed") %}
+<td style="padding: 10pt; width: 33%;"><p class=MsoNormal><span style='font-family:"Verdana",sans-serif'><font color="red">FAILED</font><o:p></o:p></span></p></td><td style="padding: 10pt; width: 33%;"><p class=MsoNormal><span style='font-family:"Verdana",sans-serif'>{{ request_type | upper }}<o:p></o:p></span></p></td><td style="padding: 10pt; width: 33%;"><p class=MsoNormal><span style='font-family:"Verdana",sans-serif'><a href={{ ansi_url | trim }}><span style='color:blue'>{{ post_environ | upper }}</span></a><o:p></o:p></span></p></td>
+{% endif %}
+</tr>    
+</table>
+
+<p class=MsoNormal><span lang=EN style='font-family:"Verdana",sans-serif'><o:p>&nbsp;</o:p></span></p>
+<h3><strong><span lang=EN style='font-family:"Verdana",sans-serif'>SUMMARY</span></strong><span lang=EN style='font-family:"Verdana",sans-serif'><o:p></o:p></span></h3>
+<div class=MsoNormal align=center style='text-align:center'><span lang=EN style='font-family:"Verdana",sans-serif'><hr size=2 width="100%" noshade style='color:green' align=center></span></div>
+
+{% if (final_status == "success") %}
+<p><span lang=EN style='font-family:"Verdana",sans-serif'>Your request for Ansible onboarding has <font color="green"><b>SUCCEEDED</b></font><o:p></o:p></span></p>      
+{% elif (final_status == "failed") %}
+<p><span lang=EN style='font-family:"Verdana",sans-serif'>Your request for Ansible onboarding has <font color="red"><b>FAILED</b></font><o:p></o:p></span></p>     
+{% endif %}         
+
+{% if (all_onboarding_status is defined) and (all_onboarding_status | length > 0) and ('success' in onboarding_status | lower) %}
+<p><span lang=EN style='font-family:"Verdana",sans-serif'>Your Project Path is <span style='color:blue'><b>{{ project_path }}</b></span>. Use this path for promoting to UAT or PROD instances.<o:p></o:p></span></p>
+<br>
+
+<table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none;border:solid windowtext 1.0pt'>
+<tr>
+<p>
+<th bgcolor="green"><b><span lang=EN style='color:white'>Resource Type</span></b></th>
+<th bgcolor="green"><p><b><span lang=EN style='color:white'>Resource Name(s)</span></b></th>
+<th bgcolor="green"><p><b><span lang=EN style='color:white'>Status</span></b></th>
+</p>
+</tr>
+<tbody>
+
+{% for key, items in all_onboarding_status.items() %}
+    <tr style="mso-yfti-irow:{{ loop.index + 1 }}">
+        <td rowspan="{{ items|length }}" width="156" valign="top" style="width:116.85pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt">
+            <p><span lang="EN"><o:p>{{ key }}</o:p></span></p>
+        </td>
+        {% for value,status in items.items() %}
+            <td width="456" valign="top" style="width:316.85pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt">
+                <p><span lang="EN"><o:p>{{ value }}</o:p></span></p>
+            </td>
+            <td width="456" valign="top" style="width:116.85pt;border:solid windowtext 1.0pt;border-top:none;padding:0cm 5.4pt 0cm 5.4pt">
+                <p><span lang="EN"><o:p>
+                    <font color="{{ 'green' if 'success' in (status | lower) else 'red' }}">{{ status }}</font>
+                </o:p></span></p>
+            </td>
+        </tr>
+        {% endfor %}
+{% endfor %}
+</tbody>
+</table>
+{% elif (all_onboarding_status is defined) and (all_onboarding_status | length == 0) and ('denied' in onboarding_status | lower) %}
+<p><span lang=EN style='font-family:"Verdana",sans-serif'>Your request has either <font color="red">DENIED</font> or <font color="orange">TIMED OUT ON APPROVAL</font>. Please resubmit the request if timed out or reach out to <a href="https://teams.microsoft.com/l/channel/19%3Ac90fe3ccb9b84effa538d46100482f83%40thread.tacv2/Ansible%20help?groupId=5b3545ea-a7b4-49a3-a4ce-9ccbf65d4306&tenantId=7521acbc-a68c-41e5-a975-1cf83066dd19"><span style='color:blue'>Ansible Community Help</span></a> for support.<o:p></o:p></span></p>
+<br>
+{% elif (('update' in request_type | lower) or ('new' in request_type | lower)) and ('failed' in onboarding_status | lower) %}
+<p><span lang=EN style='font-family:"Verdana",sans-serif'><font color="orange"><b>Reason of Failure:</b></font> {{ error_message }}<o:p></o:p></span></p>
+<p><span lang=EN style='font-family:"Verdana",sans-serif'>Please resubmit the request with correct inputs or reach out to <a href="https://teams.microsoft.com/l/channel/19%3Ac90fe3ccb9b84effa538d46100482f83%40thread.tacv2/Ansible%20help?groupId=5b3545ea-a7b4-49a3-a4ce-9ccbf65d4306&tenantId=7521acbc-a68c-41e5-a975-1cf83066dd19"><span style='color:blue'>Ansible Community Help</span></a> for support.<o:p></o:p></span></p>
+<br>
+{% endif %}
+
+{% if ('initial' in request_type | lower) and ('success' in onboarding_status | lower) %}
+<p><span lang=EN style='font-family:"Verdana",sans-serif'>Please update the SCM and other required credentials and perform the project sync before the FINAL promotion to onboard templates & workflows.<o:p></o:p></span></p>
+<br>
+{% endif %}
+
+{% if promote is defined %}
+    {% if ('final' in request_type | lower) and (promote | bool == false) %}
+    <p><span lang=EN style='font-family:"Verdana",sans-serif'>Project does not exists. Please run INITIAL promotion and then run FINAL promotion.<o:p></o:p></span></p>
+    <br>
+    {% endif %}
+{% endif %}
+
+<p><span lang=EN><o:p>&nbsp;</o:p></span></p><h3><strong><span lang=EN style='font-family:"Verdana",sans-serif'>GETTING STARTED</span></strong><span lang=EN style='font-family:"Verdana",sans-serif'><o:p></o:p></span>
+</h3>
+<div class=MsoNormal align=center style='text-align:center'><span lang=EN style='font-family:"Verdana",sans-serif'><hr size=2 width="100%" noshade style='color:green' align=center></span>
+</div>
+<p><span lang=EN style='font-family:"Verdana",sans-serif'>Ansible Onboarding: <a href="https://confluence.fmr.com/display/AP130074/2.+FAQs"><span style='color:blue'>FAQ</span></a><o:p></o:p></span></p>
+<p><span lang=EN style='font-family:"Verdana",sans-serif'>Ansible Onboarding Job: <a href="{{ base_url }}/#/jobs/workflow/{{ workflow_job_id }}/output"><span style='color:blue'>Output</span></a><o:p></o:p></span></p>
+<p><span lang=EN style='font-family:"Verdana",sans-serif'>Ansible Onboarding Configuration: <a href="https://github.com/Fidelity-Green/ap163370-onboarding/tree/main/{{ target_folder }}"><span style='color:blue'>GitHub</span></a><o:p></o:p></span></p>
+</p>
+</div>
+</body>
+</html>
